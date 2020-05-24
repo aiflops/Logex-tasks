@@ -11,7 +11,6 @@ Answer
 
 
 D        test_Patients: Should contain data for 300 000 unique patients. For gender use M for male and F for female.
-
 ANSWER
 
 declare @All_test_patients INT = 300000;
@@ -30,7 +29,6 @@ end
 E        test_medical_trajectory: Map trajects to patients at random. Each of the patients must be mapped to at least 1 traject.
 
 F	 test_prices: generate a random price for each activity. Prices should be in a range from 10 to 200 (use just whole numbers)
-
 ANSWER
 
 declare @countActivities INT = (SELECT count(*) FROM [TASK].[dbo].[test_activities]);
