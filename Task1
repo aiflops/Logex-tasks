@@ -15,6 +15,8 @@ Requirements:
 ·        test_medical_trajectory: Map trajects to patients at random. Each of the patients must be mapped to at least 1 traject.
 
 #test_prices: generate a random price for each activity. Prices should be in a range from 10 to 200 (use just whole numbers)
+ANSWER
+
 declare @countActivities INT = (SELECT count(*) FROM [TASK].[dbo].[test_activities]);
 DECLARE @i int=1
 while @i <= @countActivities
@@ -23,3 +25,5 @@ begin
     insert into [TASK].[dbo].[test_prices] (activity_id, price) values (@i,@price);
 	set @i+=1
 end
+UPDATE [TASK].[dbo].[test_prices]
+SET price = floor(price)
