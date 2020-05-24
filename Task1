@@ -12,6 +12,21 @@ C        date_performed for all activities should be randomly distributed 2 year
 
 D        test_Patients: Should contain data for 300 000 unique patients. For gender use M for male and F for female.
 
+ANSWER
+
+declare @All_test_patients INT = 300000;
+DECLARE @i int=1
+while @i <= @All_test_patients
+begin
+	declare @name varchar(50) = 'name'+  CONVERT(varCHAR(50), @i);
+	declare @lastname varchar(50) = 'lastname'+  CONVERT(varCHAR(50), @i);
+	declare @address1 varchar(50) = 'address'+  CONVERT(varCHAR(50), @i);
+	declare @city varchar(50) = 'city'+  CONVERT(varCHAR(50), @i);
+	declare @gender varchar(1) =  (CASE WHEN ABS(CHECKSUM(NEWID()) % 2) = 1 THEN 'M' ELSE 'F' END);
+	insert into [TASK].[dbo].[test_patients] ([firstname],[lastname],[address1],[city], gender) values (@name, @lastname,@address1, @city, @gender);
+	set @i+=1
+end
+
 E        test_medical_trajectory: Map trajects to patients at random. Each of the patients must be mapped to at least 1 traject.
 
 F	 test_prices: generate a random price for each activity. Prices should be in a range from 10 to 200 (use just whole numbers)
