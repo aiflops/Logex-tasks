@@ -27,7 +27,25 @@ begin
 end
 
 E        test_medical_trajectory: Map trajects to patients at random. Each of the patients must be mapped to at least 1 traject.
+DECLARE @MyCursor CURSOR;
+DECLARE @MyField INT;
+BEGIN
+    SET @MyCursor = CURSOR FOR select [patientid]  from [TASK].[dbo].[test_patients];    
+    OPEN @MyCursor 
+    FETCH NEXT FROM @MyCursor 
+    INTO @MyField
 
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+
+		-- do code here
+      FETCH NEXT FROM @MyCursor 
+      INTO @MyField 
+    END; 
+
+    CLOSE @MyCursor ;
+    DEALLOCATE @MyCursor;
+END;
 F	 test_prices: generate a random price for each activity. Prices should be in a range from 10 to 200 (use just whole numbers)
 ANSWER
 
