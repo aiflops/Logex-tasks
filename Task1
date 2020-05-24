@@ -5,7 +5,6 @@ Create a script that will populate test_patients, test_prices, test_medical_cate
 Requirements:
 
 A       test_trajectory_detail: Should be populated by 5 000 000 lines. Activity_id has to be taken from test_activities table and activities should be randomly distributed, each traject must be mapped to at least 3 activities.
-
 B        Traject can contain the same activity multiple times.
 
 C        date_performed for all activities should be randomly distributed 2 years to the past. Date performed for activities within the same traject cannot be more than 3 months apart
