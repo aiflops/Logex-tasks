@@ -1,0 +1,22 @@
+/****** Task:5
+
+Create a query that will return all patients labelled by a treatment category.
+
+Rules for labelling:
+
+The patient should be marked by the treatment category corresponding to the subcategory mapped to an activity with the highest cost sum performed within a traject (remember single activity can be performed multiple times in a traject and in this case cost is a sum of instances).
+
+·        For example, Patient 1 has 3 trajects and corresponding activities mapped to a traject.
+******/
+SELECT distinct
+	trajectory.patient_id
+	,detail.[traject_id]
+    ,detail.[activity_id]
+	,sum(prices.price) as price_sum
+  FROM [TASK].[dbo].[test_trajectory_detail] as detail
+  inner join [TASK].[dbo].[test_medical_trajectory] as trajectory
+  on trajectory.traject_id = detail.traject_id
+  inner join [TASK].[dbo].[test_prices] as prices
+  on prices.[activity_id] = detail.[activity_id]
+  group by trajectory.patient_id, detail.[traject_id], detail.[activity_id]
+  order by trajectory.patient_id, price_sum desc, detail.[traject_id]
