@@ -1,0 +1,17 @@
+/****** 
+Task:4
+Write a query that will calculate the overall cost per treatment category by month for the year 2017.
+Columns returned: Treatment category Id, Cost, Month
+******/
+SELECT 
+	  activity.treatment_subcategory_id as Category
+      ,MONTH(date_performed) AS Month
+	  ,sum(price) as Price
+  FROM [TASK].[dbo].[test_trajectory_detail] as traject
+  inner join [TASK].dbo.test_prices as prices
+  on traject.activity_id = prices.activity_id
+  inner join [TASK].dbo.test_activities as activity
+  on traject.activity_id = activity.id
+  where date_performed between '01-01-2017' and '31-12-2017'
+  group by activity.treatment_subcategory_id ,MONTH(date_performed)
+  order by Category, Month asc;
