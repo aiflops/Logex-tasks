@@ -1,0 +1,19 @@
+Task:2
+Write a query that will return the total cost of the most expensive patient in 2017 along with patient details.
+Columns returned: Patient_id, First_name, Second_name, gender, date_of_birth, cost
+
+SELECT patients.patientid,[firstname],[lastname],[date_of_birth],[gender],most_expensive.year_price
+FROM [TASK].[dbo].[test_patients] as patients
+inner join (
+	SELECT top(1) mt.patient_id as patientid, sum(prices.price) as year_price
+	FROM [TASK].[dbo].[test_trajectory_detail] as traject
+	inner join [TASK].[dbo].[test_prices] as prices
+	on traject.activity_id = prices.activity_id
+	inner join TASK.dbo.[test_medical_trajectory] as mt
+	on traject.traject_id = mt.traject_id
+	where date_performed BETWEEN '01-01-2017' AND '31-12-2017' 
+	group by mt.patient_id
+	order by year_price desc
+) as most_expensive
+on most_expensive.patientid = patients.patientid;
+
