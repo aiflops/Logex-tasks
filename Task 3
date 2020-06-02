@@ -1,0 +1,12 @@
+####Task:3
+Write a query that will return cost per patient grouped by a year.
+Columns returned: Patient_id, cost, year
+
+SELECT mt.patient_id, sum(prices.price) as year_price, datepart(yyyy, date_performed) as year
+FROM [TASK].[dbo].[test_trajectory_detail] as traject
+inner join [TASK].[dbo].[test_prices] as prices
+on traject.activity_id = prices.activity_id
+inner join TASK.dbo.[test_medical_trajectory] as mt
+on traject.traject_id = mt.traject_id
+group by mt.patient_id, datepart(yyyy, date_performed)
+order by mt.patient_id, datepart(yyyy, date_performed);
