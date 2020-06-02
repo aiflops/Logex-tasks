@@ -9,6 +9,40 @@ B) Traject can contain the same activity multiple times.
 C) Date_performed for all activities should be randomly distributed 2 years to the past. Date performed for activities within the same traject cannot be more than 3 months apart
 Answer
 
+DECLARE @Cursor CURSOR;
+DECLARE @IdTraject INT;
+DECLARE @NumberOfActivities INT;
+DECLARE @randActivities INT;
+DECLARE @randomDate date;
+DECLARE @randomDateActivity date;
+
+BEGIN
+    SET @Cursor = CURSOR FOR select traject_id  from [TASK].[dbo].[test_medical_trajectory];    
+    OPEN @Cursor 
+    FETCH NEXT FROM @Cursor 
+    INTO @IdTraject
+
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+		  SET @NumberOfActivities =  ABS(CHECKSUM(NewId())) % 7 +3;
+		  DECLARE @i int=0
+		  Declare @DateStart	Date = '2017-01-01' ,@DateEnd	Date = '2019-09-30'
+		  set @randomDate = DateAdd(Day, Rand() * DateDiff(Day, @DateStart, @DateEnd), @DateStart)
+
+		  while @i <= @NumberOfActivities
+			begin
+				set @randActivities =  ABS(CHECKSUM(NewId())) % 1000;
+				set @randomDateActivity = DateAdd(Day, ABS(CHECKSUM(NewId())) % 90, @randomDate)
+				insert into [TASK].[dbo].[test_trajectory_detail] (traject_id,activity_id, date_performed) values (@IdTraject, @randActivities, @randomDateActivity);
+				set @i+=1
+			end
+	  FETCH NEXT FROM @Cursor 
+      INTO @IdTraject 
+    END; 
+
+    CLOSE @Cursor ;
+    DEALLOCATE @Cursor;
+END;
 
 D) test_Patients: Should contain data for 300 000 unique patients. For gender use M for male and F for female.
 ANSWER
