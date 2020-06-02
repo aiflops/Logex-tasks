@@ -8,15 +8,27 @@ The patient should be marked by the treatment category corresponding to the subc
 
 ·        For example, Patient 1 has 3 trajects and corresponding activities mapped to a traject.
 ******/
-SELECT distinct
-	trajectory.patient_id
-	,detail.[traject_id]
-    ,detail.[activity_id]
-	,sum(prices.price) as price_sum
+SELECT sumPrice.patient_id, sumPrice.trajectID, sumPrice.activityID, normalPrice.price, sumPrice.sum FROM 
+(
+  SELECT trajectory.patient_id ,detail.[traject_id] as trajectID, detail.[activity_id] as activityID, sum(prices.price) as sum
   FROM [TASK].[dbo].[test_trajectory_detail] as detail
   inner join [TASK].[dbo].[test_medical_trajectory] as trajectory
   on trajectory.traject_id = detail.traject_id
   inner join [TASK].[dbo].[test_prices] as prices
   on prices.[activity_id] = detail.[activity_id]
   group by trajectory.patient_id, detail.[traject_id], detail.[activity_id]
-  order by trajectory.patient_id, price_sum desc, detail.[traject_id]
+  ) 
+  as sumPrice
+
+  inner join (
+  SELECT prices.price as price, detail.[traject_id] as trajectID, detail.[activity_id] as activityID
+  FROM [TASK].[dbo].[test_trajectory_detail] as detail
+  inner join [TASK].[dbo].[test_medical_trajectory] as trajectory
+  on trajectory.traject_id = detail.traject_id
+  inner join [TASK].[dbo].[test_prices] as prices
+  on prices.[activity_id] = detail.[activity_id]
+  )
+  as normalPrice
+  on CONCAT(normalPrice.trajectID,normalPrice.activityID) =  CONCAT(sumPrice.trajectID,sumPrice.activityID)
+--  where patient_id = 843268
+  order by sumPrice.patient_id, sumPrice.sum desc, sumPrice.trajectID;
